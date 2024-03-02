@@ -21,10 +21,15 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
-        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     </ItemGroup>
     <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
         <Message Text="Restoring dotnet tools" Importance="High" />
         <Exec Command="dotnet tool restore" />
+    </Target>
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+      <Exec Command="mgcb /quiet /@:&quot;$(ProjectDir)Content\Content.mgcb&quot; /platform:DesktopGL /outputDir:&quot;$(ProjectDir)Content/bin/DesktopGL/Content&quot; /intermediateDir:&quot;$(ProjectDir)Content/obj/DesktopGL/net6.0/Content&quot; /workingDir:&quot;$(ProjectDir)Content/&quot;" />
+    </Target>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="copy &quot;$(ProjectDir)Content\bin\DesktopGL\Content\*&quot; &quot;$(ProjectDir)$(OutputPath)Content&quot;" />
     </Target>
 </Project>
